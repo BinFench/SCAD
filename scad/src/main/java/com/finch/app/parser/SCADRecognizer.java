@@ -53,12 +53,11 @@ public class SCADRecognizer extends BaseParser<Object>
 
     public Rule Scope() {
         return FirstOf(
-                Function(),
-                Class(),
-                Variable(),
-                Operator(),
-                Expression()
-            
+            Function(),
+            Class(),
+            Variable(),
+            Operator(),
+            Expression()
         );
     }
 
@@ -380,7 +379,10 @@ public class SCADRecognizer extends BaseParser<Object>
         return FirstOf(
             Sequence(Name(), W0(), Assign(), W0(), Term()),
             Sequence(Name(), W0(), Inc(), W0()),
-            Sequence(Inc(), W0(), Name(), W0())
+            Sequence(Inc(), W0(), Name(), W0()),
+            Sequence(Member(), W0(), Assign(), W0(), Term()),
+            Sequence(Member(), W0(), Inc(), W0()),
+            Sequence(Inc(), W0(), Member(), W0())
         );
     }
 
