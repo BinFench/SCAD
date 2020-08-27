@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConditionalExpr extends Expr {
-    public Condition condition;
+    public ConditionExpr condition;
     public List<Scope> scopes;
     public List<ConditionalExpr> conditionals;
     public Boolean hasElse;
@@ -19,7 +19,7 @@ public class ConditionalExpr extends Expr {
         this.elseScopes = new ArrayList<Scope>();
     }
 
-    ConditionalExpr addCondition(Condition condition) {
+    ConditionalExpr addCondition(ConditionExpr condition) {
         this.condition = condition;
 
         return this;

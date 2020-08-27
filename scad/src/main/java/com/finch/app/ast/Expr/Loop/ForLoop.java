@@ -7,10 +7,10 @@ import java.util.List;
 public class ForLoop extends LoopExpr {
     public String varName;
     public Var var;
-    public Condition condition;
+    public ConditionExpr condition;
     public Expr expr;
     
-    ForLoop(String varName, Condition condition, Expr expr) {
+    ForLoop(String varName, ConditionExpr condition, Expr expr) {
         this.id = "Expr";
         this.exprID = "Loop";
         this.loopID = "For";
@@ -20,7 +20,7 @@ public class ForLoop extends LoopExpr {
         this.scopes = new ArrayList<Scope>();
     }
 
-    ForLoop(Var var, Condition condition, Expr expr) {
+    ForLoop(Var var, ConditionExpr condition, Expr expr) {
         this.id = "Expr";
         this.exprID = "Loop";
         this.loopID = "For";

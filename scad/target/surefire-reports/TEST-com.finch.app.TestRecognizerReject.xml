@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.finch.app.TestRecognizerReject" time="0.002" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.finch.app.TestRecognizerReject" time="0.003" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
     <property name="file.encoding.pkg" value="sun.io"/>
@@ -16,7 +16,7 @@
     <property name="user.country" value="CA"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/amd64"/>
-    <property name="sun.java.command" value="/home/benf/SCAD/scad/target/surefire/surefirebooter7858385959217705577.jar /home/benf/SCAD/scad/target/surefire 2020-08-24T11-39-40_998-jvmRun1 surefire4032213893237763641tmp surefire_02650296861704591019tmp"/>
+    <property name="sun.java.command" value="/home/benf/SCAD/scad/target/surefire/surefirebooter2292462028880029838.jar /home/benf/SCAD/scad/target/surefire 2020-08-27T02-24-14_863-jvmRun1 surefire6597307706030708455tmp surefire_07547969718097560041tmp"/>
     <property name="surefire.test.class.path" value="/home/benf/SCAD/scad/target/test-classes:/home/benf/SCAD/scad/target/classes:/home/benf/.m2/repository/junit/junit/4.13/junit-4.13.jar:/home/benf/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/home/benf/.m2/repository/org/parboiled/parboiled-java/1.1.8/parboiled-java-1.1.8.jar:/home/benf/.m2/repository/org/parboiled/parboiled-core/1.1.8/parboiled-core-1.1.8.jar:/home/benf/.m2/repository/org/ow2/asm/asm/5.2/asm-5.2.jar:/home/benf/.m2/repository/org/ow2/asm/asm-tree/5.2/asm-tree-5.2.jar:/home/benf/.m2/repository/org/ow2/asm/asm-analysis/5.2/asm-analysis-5.2.jar:/home/benf/.m2/repository/org/ow2/asm/asm-util/5.2/asm-util-5.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/home/benf"/>
@@ -29,7 +29,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/home/benf/SCAD/scad/target/surefire/surefirebooter7858385959217705577.jar"/>
+    <property name="surefire.real.class.path" value="/home/benf/SCAD/scad/target/surefire/surefirebooter2292462028880029838.jar"/>
     <property name="sun.boot.class.path" value="/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/resources.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/rt.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/sunrsasign.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/jsse.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/jce.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/charsets.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/lib/jfr.jar:/home/benf/.sdkman/candidates/java/8.0.252-open/jre/classes"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="1.8.0_252-b09"/>
@@ -62,5 +62,5 @@
   <testcase name="shouldAcceptInput[2]" classname="com.finch.app.TestRecognizerReject" time="0"/>
   <testcase name="shouldAcceptInput[3]" classname="com.finch.app.TestRecognizerReject" time="0.001"/>
   <testcase name="shouldAcceptInput[4]" classname="com.finch.app.TestRecognizerReject" time="0"/>
-  <testcase name="shouldAcceptInput[5]" classname="com.finch.app.TestRecognizerReject" time="0"/>
+  <testcase name="shouldAcceptInput[5]" classname="com.finch.app.TestRecognizerReject" time="0.001"/>
 </testsuite>

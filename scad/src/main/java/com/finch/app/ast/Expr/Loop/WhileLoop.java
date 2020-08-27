@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WhileLoop extends LoopExpr {
-    public Condition condition;
+    public ConditionExpr condition;
     
-    WhileLoop(Condition condition) {
+    WhileLoop(ConditionExpr condition) {
         this.id = "Expr";
         this.exprID = "Loop";
         this.loopID = "While";

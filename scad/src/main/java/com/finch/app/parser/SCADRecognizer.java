@@ -476,7 +476,7 @@ public class SCADRecognizer extends BaseParser<Object>
                             CharRange('a', 'z'),
                             CharRange('A', 'Z'),
                             CharRange('0', '9'),
-                            AnyOf("`~!@#$%^&*()-_=+|]}[{;:/?.>,<")
+                            AnyOf("`~!@#$%^&*()-_=+|]}[{;:/?.>,<'")
                         )
                     ),
                     "\""
@@ -491,7 +491,7 @@ public class SCADRecognizer extends BaseParser<Object>
                             CharRange('a', 'z'),
                             CharRange('A', 'Z'),
                             CharRange('0', '9'),
-                            AnyOf("`~!@#$%^&*()-_=+|]}[{;:/?.>,<")
+                            AnyOf("`~!@#$%^&*()-_=+|]}[{;:/?.>,<\"")
                         )
                     ),
                     "'"
@@ -582,7 +582,9 @@ public class SCADRecognizer extends BaseParser<Object>
                     ")"
                 )
             ), 
-            W0(), Math(), W0(), Term()
+            W0(), 
+            FirstOf(Math(), Comparator()),
+            W0(), Term()
         );
     }
 

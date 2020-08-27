@@ -3,7 +3,7 @@ package com.finch.app;
 public class Var extends Scope {
     public String type;
     public String name;
-    public Value value;
+    public Term value;
 
     Var(String type, String name) {
         this.type = type;
@@ -11,7 +11,7 @@ public class Var extends Scope {
         this.id = "Var";
     }
 
-    public void assign(Value value) {
+    public void assign(Term value) {
         this.value = value;
     }
 }

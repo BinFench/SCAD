@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DoWhileLoop extends LoopExpr {
-    public Condition condition;
+    public ConditionExpr condition;
     public List<Scope> scopes;
     
-    DoWhileLoop(Condition condition) {
+    DoWhileLoop(ConditionExpr condition) {
         this.id = "Expr";
         this.exprID = "Loop";
         this.loopID = "DoWhile";
