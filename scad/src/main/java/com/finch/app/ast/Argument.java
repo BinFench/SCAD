@@ -7,12 +7,12 @@ import java.util.List;
 public class Argument {
     public int valType;
     public List<Var> vars;
-    public List<Term> terms;
+    public List<Expr> terms;
 
     Argument() {
         this.valType = 0;
         this.vars = new ArrayList<Var>();
-        this.terms = new ArrayList<Term>();
+        this.terms = new ArrayList<Expr>();
     }
 
     public Argument addVar(Var var) {
@@ -25,7 +25,7 @@ public class Argument {
         }
     }
 
-    public Argument addVal(Term val) {
+    public Argument addVal(Expr val) {
         if (this.valType != 1) {
             this.valType = 2;
             this.terms.add(val);
@@ -39,7 +39,7 @@ public class Argument {
         return this.vars.get(i);
     }
 
-    public Term getVal(int i) {
+    public Expr getVal(int i) {
         return this.terms.get(i);
     }
 }

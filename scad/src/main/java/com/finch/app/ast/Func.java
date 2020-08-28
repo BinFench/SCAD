@@ -10,7 +10,6 @@ public class Func extends Scope {
     public List<Scope> scopes;
     public List<Var> vars;
     public List<Expr> exprs;
-    public List<Op> ops;
     public Argument arguments;
 
     Func(String type, String name, Argument arguments) {

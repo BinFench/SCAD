@@ -10,14 +10,14 @@ public class Program {
     public List<Class> classes;
     public List<Var> vars;
     public List<Expr> exprs;
-    public List<Op> ops;
 
     Program() {
         this.scopes = new ArrayList<Scope>();
     }
 
-    public void addScope(Scope scope) {
+    public Program addScope(Scope scope) {
         this.scopes.add(scope);
+        return this;
     }
 
     public Scope getScope(int i) {

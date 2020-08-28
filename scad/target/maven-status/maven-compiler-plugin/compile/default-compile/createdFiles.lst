@@ -5,8 +5,8 @@ com/finch/app/StringValue.class
 com/finch/app/MemberCallExpr.class
 com/finch/app/MemberExpr.class
 com/finch/app/Expr.class
-com/finch/app/Term.class
 com/finch/app/ShapeValue.class
+com/finch/app/TermExpr.class
 com/finch/app/FloatValue.class
 com/finch/app/Class.class
 com/finch/app/TestRecognizerReject.class
@@ -14,11 +14,11 @@ com/finch/app/TestRecognizerAccept.class
 com/finch/app/BoolValue.class
 com/finch/app/ArrayValue.class
 com/finch/app/IllegalParsableException.class
-com/finch/app/Op.class
 com/finch/app/ConditionExpr.class
 com/finch/app/LoopExpr.class
 com/finch/app/Program.class
 com/finch/app/Var.class
+com/finch/app/OpExpr.class
 com/finch/app/Func.class
 com/finch/app/ForLoop.class
 com/finch/app/DoWhileLoop.class
@@ -29,3 +29,4 @@ com/finch/app/Scope.class
 com/finch/app/FuncCallExpr.class
 com/finch/app/WhileLoop.class
 com/finch/app/ConditionalExpr.class
+com/finch/app/SCADParser.class

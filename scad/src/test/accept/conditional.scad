@@ -17,3 +17,7 @@ if (test == 0) {
 } else {
     test--;
 }
+
+if (!false) {
+    test = 0;
+}

@@ -15,7 +15,7 @@ import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.errors.ErrorUtils;
 
 @BuildParseTree
-public class SCADRecognizer extends BaseParser<Object>
+public class SCADParser extends BaseParser<Object>
 {
     public static void main( String[] args )
     {
