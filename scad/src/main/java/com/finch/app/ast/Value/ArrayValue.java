@@ -10,15 +10,19 @@ public class ArrayValue extends Value {
 
     ArrayValue(String type) {
         this.type = type;
-        this.id = "Array";
+        this.id = "Value";
+        this.valID = "Array";
         this.values = new ArrayList<Value>();
     }
 
     public ArrayValue addValue(Value value) {
-        if (this.type == value.id) {
-            this.values.add(value);
-        } else {
+        if(value instanceof ArrayValue && this.type != ((ArrayValue)value).type) {
             throw new IllegalParsableException("Type mismatch: Array item types don't match");
+        } else {
+            if (this.type != value.valID) {
+                throw new IllegalParsableException("Type mismatch: Array item types don't match");
+            }
+            this.values.add(value);
         }
         return this;
     }

@@ -16,12 +16,13 @@ public class Class extends Scope {
         this.id = "Class";
     }
 
-    public void addScope(Scope scope) {
+    public Class addScope(Scope scope) {
         if (scope.id == "Var" || scope.id == "Func") {
             this.scopes.add(scope);
         } else {
             throw new IllegalParsableException("Statements within class must be encapsulated in functions.");
         }
+        return this;
     }
 
     public Scope getScope(int i) {

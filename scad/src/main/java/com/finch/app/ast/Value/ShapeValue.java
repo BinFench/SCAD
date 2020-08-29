@@ -15,6 +15,8 @@ public class ShapeValue extends Value {
     //The align variables are used to map particular curves/planes to particular lines/faces
 
     ShapeValue() {
+        this.id = "Value";
+        this.valID = "Shape";
         this.points = new ArrayList<List<Double>>();
         this.lines = new ArrayList<List<Integer>>();
         this.faces = new ArrayList<List<Integer>>();

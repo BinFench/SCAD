@@ -1,8 +1,8 @@
 com/finch/app/IntValue.class
+com/finch/app/ReturnExpr.class
 com/finch/app/SCADRecognizer.class
 com/finch/app/Value.class
 com/finch/app/StringValue.class
-com/finch/app/MemberCallExpr.class
 com/finch/app/MemberExpr.class
 com/finch/app/Expr.class
 com/finch/app/ShapeValue.class

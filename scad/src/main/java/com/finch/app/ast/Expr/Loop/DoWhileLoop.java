@@ -8,11 +8,15 @@ public class DoWhileLoop extends LoopExpr {
     public ConditionExpr condition;
     public List<Scope> scopes;
     
-    DoWhileLoop(ConditionExpr condition) {
+    DoWhileLoop() {
         this.id = "Expr";
         this.exprID = "Loop";
         this.loopID = "DoWhile";
-        this.condition = condition;
         this.scopes = new ArrayList<Scope>();
+    }
+
+    public DoWhileLoop addCondition(ConditionExpr condition) {
+        this.condition = condition;
+        return this;
     }
 }

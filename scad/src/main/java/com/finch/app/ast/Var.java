@@ -14,7 +14,8 @@ public class Var extends Scope {
         this.id = "Var";
     }
 
-    public void assign(Expr value) {
+    public Var assign(Expr value) {
         this.value = value;
+        return this;
     }
 }

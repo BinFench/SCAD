@@ -10,24 +10,22 @@ public class ForLoop extends LoopExpr {
     public ConditionExpr condition;
     public Expr expr;
     
-    ForLoop(String varName, ConditionExpr condition, Expr expr) {
+    ForLoop(Expr expr, ConditionExpr condition) {
         this.id = "Expr";
         this.exprID = "Loop";
         this.loopID = "For";
-        this.varName = varName;
         this.condition = condition;
         this.expr = expr;
         this.scopes = new ArrayList<Scope>();
     }
 
-    ForLoop(Var var, ConditionExpr condition, Expr expr) {
-        this.id = "Expr";
-        this.exprID = "Loop";
-        this.loopID = "For";
-        this.varName = var.name;
-        this.var = var;
-        this.condition = condition;
-        this.expr = expr;
-        this.scopes = new ArrayList<Scope>();
+    public ForLoop addVar(Object obj) {
+        if (obj instanceof String) {
+            this.varName = (String)obj;
+        } else {
+            this.var = (Var)obj;
+            this.varName = this.var.name;
+        }
+        return this;
     }
 }

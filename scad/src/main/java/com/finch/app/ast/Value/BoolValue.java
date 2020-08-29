@@ -4,7 +4,8 @@ public class BoolValue extends Value {
     public Boolean value;
 
     BoolValue(Boolean value) {
-        this.id = "Bool";
+        this.valID = "Bool";
+        this.id = "Value";
         this.value = value;
     }
 }

@@ -20,12 +20,13 @@ public class Func extends Scope {
         this.arguments = arguments;
     }
 
-    public void addScope(Scope scope) {
+    public Func addScope(Scope scope) {
         if (scope.id != "Func" && scope.id != "Class") {
             this.scopes.add(scope);
         } else {
             throw new IllegalParsableException("Cannot declare function or class within function");
         }
+        return this;
     }
 
     public Scope getScope(int i) {

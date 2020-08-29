@@ -40,11 +40,14 @@ public class SCADParser extends BaseParser<Object>
 
     public Rule Program() {
         return Sequence(
+            push(new Program()),
             W0(),
             OneOrMore(
                 Sequence(
                     Scope(),
-                    W0()
+                    W0(),
+                    swap(),
+                    push(((Program)pop()).addScope((Scope)pop()))
                 )
             ),
             EOI
@@ -63,17 +66,47 @@ public class SCADParser extends BaseParser<Object>
 
     public Rule Variable() {
         return Sequence(
-            Type(), W1(), Name(), Optional(W0(), "=", W0(), Term()), W0(), ";"
+            Type(),
+            push(match()),
+            W1(),
+            Name(),
+            push(match()),
+            swap(),
+            push(new Var((String)pop(), (String)pop())),
+            Optional(
+                W0(),
+                "=",
+                W0(),
+                Term(),
+                swap(),
+                push(((Var)pop()).assign((Expr)pop()))
+            ),
+            W0(),
+            ";"
         );
     }
 
     public Rule Function() {
         return Sequence(
-            Type(), W1(), Name(), W0(), "(", W0(), Arguments(), ")", W0(), "{",
+            Type(),
+            push(match()),
+            W1(),
+            Name(),
+            push(match()),
+            W0(),
+            "(",
+            W0(),
+            Arguments(),
+            push(newFunction((Argument)pop(), (String)pop(), (String)pop())),
+            ")",
+            W0(),
+            "{",
                 W0(),
                 OneOrMore(
                     Sequence(
                         Scope(),
+                        swap(),
+                        push(((Func)pop()).addScope((Scope)pop())),
                         W0()
                     )
                 ),
@@ -81,13 +114,21 @@ public class SCADParser extends BaseParser<Object>
         );
     }
 
+    public Func newFunction(Argument arg, String name, String type) {
+        return new Func(type, name, arg);
+    }
+
     public Rule Class() {
         return Sequence(
-            Name(), W0(), "{",
+            Name(),
+            push(new Class(match())),
+            W0(), "{",
                 W0(),
                 OneOrMore(
                     Sequence(
                         Scope(),
+                        swap(),
+                        push(((Class)pop()).addScope((Scope)pop())),
                         W0()
                     )
                 ),
@@ -120,14 +161,17 @@ public class SCADParser extends BaseParser<Object>
                 "At",
                 "Select"
             ),
+            push(match()),
             Optional(
                 Sequence(
                     W0(),
                     "(",
                     W0(),
                     Arguments(),
+                    swap(),
                     W0(),
-                    ")"
+                    ")",
+                    push(new OpExpr((String)pop(), (Argument)pop()))
                 )
             )
         );
@@ -135,18 +179,23 @@ public class SCADParser extends BaseParser<Object>
 
     public Rule Expression() {
         return FirstOf(
-                Sequence(
-                    Name(), W0(), "(", W0(), Arguments(), ")", W0(), ";"
-                ),
-                Conditional(),
-                Loop(),
-                Sequence(
-                    Assignment(), W0(), ";"
-                ),
-                Sequence(
-                    "return", W0(), Term(), W0(), ";"
-                ),
-                Sequence(Member(), W0(), ";")
+            Sequence(
+                Name(),
+                push(match()),
+                W0(), "(", W0(), Arguments(), ")", W0(), ";",
+                swap(),
+                push(new FuncCallExpr((String)pop(), (Argument)pop()))
+            ),
+            Conditional(),
+            Loop(),
+            Sequence(
+                Assignment(), W0(), ";"
+            ),
+            Sequence(
+                "return", W0(), Term(), W0(), ";",
+                push(new ReturnExpr((Expr)pop()))
+            ),
+            Sequence(Member(), W0(), ";")
         );
     }
 
@@ -201,18 +250,36 @@ public class SCADParser extends BaseParser<Object>
         return Optional(
             FirstOf(
                 Sequence(
-                    Type(), W1(), Name(), W0(),
+                    Type(),
+                    push(match()),
+                    W1(), Name(),
+                    push(match()),
+                    swap(),
+                    push(new Argument()),
+                    push((((Argument)pop()).addVar(new Var((String)pop(), (String)pop())))),
+                    W0(),
                     ZeroOrMore(
                         Sequence(
-                            ",", W0(), Type(), W1(), Name(), W0()
+                            ",", W0(), Type(),
+                            push(match()),
+                            W1(), Name(),
+                            push(match()),
+                            push(addArg((String)pop(), (String)pop(), (Argument)pop())),
+                            W0()
                         )
                     )
                 ),
                 Sequence(
-                    Term(), W0(),
+                    Term(),
+                    push(new Argument()),
+                    push(((Argument)pop()).addVal((Expr)pop())),
+                    W0(),
                     ZeroOrMore(
                         Sequence(
-                            ",", W0(), Term(), W0()
+                            ",", W0(), Term(),
+                            swap(),
+                            push(((Argument)pop()).addVal((Expr)pop())),
+                            W0()
                         )
                     )
                 )
@@ -220,48 +287,67 @@ public class SCADParser extends BaseParser<Object>
         );
     }
 
+    public Argument addArg(String name, String type, Argument arg) {
+        return arg.addVar(new Var(type, name));
+    }
+
     public Rule Value() {
         return Sequence(
-            Optional(Inc()),
-            FirstOf(
-                Sequence(
-                    Optional(
-                        Sequence(
-                            AnyOf("+-"), 
-                            W0()
-                        )
+            Sequence(
+                Optional(Inc()),
+                FirstOf(
+                    Sequence(
+                        Optional(
+                            Sequence(
+                                AnyOf("+-"), 
+                                W0()
+                            )
+                        ),
+                        Integer(), 
+                        push(new IntValue(Integer.parseInt(match()))),
+                        Optional(FirstOf("x", "y", "z", "%"))
                     ),
-                    Integer(), Optional(FirstOf("x", "y", "z", "%"))
-                ),
-                Sequence(
-                    Optional(
-                        Sequence(
-                            AnyOf("+-"), 
-                            W0()
-                        )
+                    Sequence(
+                        Optional(
+                            Sequence(
+                                AnyOf("+-"), 
+                                W0()
+                            )
+                        ),
+                        Float(),
+                        push(new FloatValue(Double.parseDouble(match()))),
+                        Optional(FirstOf("x", "y", "z", "%"))
                     ),
-                    Float(), Optional(FirstOf("x", "y", "z", "%"))
-                ),
-                String(),
-                Sequence(
-                    Optional(
-                        Sequence(
-                            AnyOf("+-"), 
-                            W0()
-                        )
+                    String(),
+                    Sequence(
+                        Optional(
+                            Sequence(
+                                AnyOf("+-"), 
+                                W0()
+                            )
+                        ),
+                        Name(),
+                        push(new VarValue(match())),
+                        push(match()),
+                        Optional(
+                            Sequence(
+                                W0(), "(", W0(), Arguments(), W0(), ")",
+                                swap(),
+                                push(new FuncCallExpr((String)pop(), (Argument)pop())),
+                                swap(),
+                                pop(),
+                                push("ToRemove")
+                            )
+                        ),
+                        pop()
                     ),
-                    Name(),
-                    Optional(
-                        Sequence(
-                            W0(), "(", W0(), Arguments(), W0(), ")"
-                        )
-                    )
+                    Member(),
+                    Operator(),
+                    Array()
                 ),
-                Member(),
-                Operator(),
-                Array()
+                Optional(Inc())
             ),
-            Optional(Inc())
+            push(((Scope)pop()).addString(match()))
         );
     }
 
@@ -272,28 +358,43 @@ public class SCADParser extends BaseParser<Object>
                 Sequence(
                     W0(),
                     Math(),
+                    push(match()),
+                    swap(),
                     W0(),
-                    Condition()
+                    Condition(),
+                    swap(),
+                    push(((ConditionExpr)pop()).addCondition((Expr)pop(), (String)pop()))
                 )
-            ), W0(), ")", W0(), "{",
+            ),
+            push(new ConditionalExpr()),
+            push(((ConditionalExpr)pop()).addCondition((ConditionExpr)pop())),
+            W0(), ")", W0(), "{",
                 W0(),
                 OneOrMore(
                     Sequence(
                         Scope(),
-                        W0()
+                        W0(),
+                        swap(),
+                        push(((ConditionalExpr)pop()).addScope((Scope)pop()))
                     )
                 ),
             "}",
             Optional(
                 FirstOf(
-                    Sequence(W0(), "else", W0(), Conditional()),
+                    Sequence(
+                        W0(), "else", W0(), Conditional(),
+                        swap(),
+                        push(((ConditionalExpr)pop()).addConditional((ConditionalExpr)pop()))
+                    ),
                     Sequence(
                         W0(), "else", W0(), "{",
                             W0(),
                             OneOrMore(
                                 Sequence(
                                     Scope(),
-                                    W0()
+                                    W0(),
+                                    swap(),
+                                    push(((ConditionalExpr)pop()).addScope((Scope)pop()))
                                 )
                             ),
                         "}"
@@ -310,8 +411,11 @@ public class SCADParser extends BaseParser<Object>
                 Sequence(
                     W0(),
                     Comparator(),
+                    push(((TermExpr)pop()).addOperation(match())),
                     W0(),
-                    Term()
+                    Term(),
+                    swap(),
+                    push(((TermExpr)pop()).addTerm((TermExpr)pop()))
                 )
             )
         );
@@ -322,8 +426,11 @@ public class SCADParser extends BaseParser<Object>
             Sequence(
                 "do", W0(), "{",
                     W0(),
+                    push(new DoWhileLoop()),
                     OneOrMore(
                         Scope(),
+                        swap(),
+                        push(((ForLoop)pop()).addScope((Scope)pop())),
                         W0()
                     ),
                 "}", W0(), "while", W0(), "(", W0(), Condition(), 
@@ -331,11 +438,17 @@ public class SCADParser extends BaseParser<Object>
                     Sequence(
                         W0(),
                         Math(),
+                        push(match()),
+                        swap(),
                         W0(),
-                        Condition()
+                        Condition(),
+                        swap(),
+                        push(((ConditionExpr)pop()).addCondition((ConditionExpr)pop(), (String)pop()))
                     )
                 ),
-                W0(), ")", W0(), ";"
+                W0(), ")", W0(), ";",
+                swap(),
+                push(((DoWhileLoop)pop()).addCondition((ConditionExpr)pop()))
             ),
             Sequence(
                 "while", W0(), "(", W0(), Condition(), 
@@ -343,38 +456,60 @@ public class SCADParser extends BaseParser<Object>
                     Sequence(
                         W0(),
                         Math(),
+                        push(match()),
+                        swap(),
                         W0(),
-                        Condition()
+                        Condition(),
+                        swap(),
+                        push(((ConditionExpr)pop()).addCondition((ConditionExpr)pop(), (String)pop()))
                     )
                 ),
                 W0(), ")", W0(), "{",
                     W0(),
+                    push(new WhileLoop((ConditionExpr) pop())),
                     OneOrMore(
                         Scope(),
+                        swap(),
+                        push(((WhileLoop)pop()).addScope((Scope)pop())),
                         W0()
                     ),
                 "}"
             ),
             Sequence(
-                "for", W0(), "(",
-                    W0(), FirstOf(Variable(), Sequence(Name(), W0(), ";")), 
-                    W0(), Condition(), 
-                    ZeroOrMore(
-                        Sequence(
-                            W0(),
-                            Math(),
-                            W0(),
-                            Condition()
-                        )
-                    ),
-                    W0(), ";",
-                    W0(), Assignment(), W0(),
+                "for", W0(), "(", W0(),
+                FirstOf(
+                    Variable(),
+                    Sequence(
+                        Name(),
+                        push(match()),
+                        W0(),
+                        ";")
+                ), 
+                W0(), Condition(), 
+                ZeroOrMore(
+                    Sequence(
+                        W0(),
+                        Math(),
+                        push(match()),
+                        swap(),
+                        W0(),
+                        Condition(),
+                        swap(),
+                        push(((ConditionExpr)pop()).addCondition((ConditionExpr)pop(), (String)pop()))
+                    )
+                ),
+                W0(), ";",
+                W0(), Assignment(), W0(),
                 ")", W0(), "{",
-                    W0(),
-                    OneOrMore(
-                        Scope(),
-                        W0()
-                    ),
+                   W0(),
+                   push(new ForLoop((AssignExpr)pop(), (ConditionExpr)pop())),
+                   push(((ForLoop)pop()).addVar(pop())),
+                   OneOrMore(
+                   Scope(),
+                   swap(),
+                   push(((ForLoop)pop()).addScope((Scope)pop())),
+                   W0()
+                   ),
                 "}"
             )
         );
@@ -382,13 +517,69 @@ public class SCADParser extends BaseParser<Object>
 
     public Rule Assignment() {
         return FirstOf(
-            Sequence(Name(), W0(), Assign(), W0(), Term()),
-            Sequence(Name(), W0(), Inc(), W0()),
-            Sequence(Inc(), W0(), Name(), W0()),
-            Sequence(Member(), W0(), Assign(), W0(), Term()),
-            Sequence(Member(), W0(), Inc(), W0()),
-            Sequence(Inc(), W0(), Member(), W0())
+            Sequence(
+                Name(),
+                push(match()),
+                W0(),
+                Assign(),
+                push(match()),
+                W0(),
+                Term(),
+                push(getAssign((Expr)pop(), (String)pop(), (String)pop()))
+            ),
+            Sequence(
+                Name(),
+                push(match()),
+                W0(),
+                Inc(),
+                push(match()),
+                swap(),
+                W0(),
+                push(new AssignExpr((String)pop(), "post" + (String)pop(), new TermExpr()))
+            ),
+            Sequence(
+                Inc(),
+                push(match()),
+                W0(),
+                Name(),
+                push(new AssignExpr(match(), "pre" + (String)pop(), new TermExpr())),
+                W0()
+            ),
+            Sequence(
+                Member(),
+                W0(),
+                Assign(),
+                push(match()),
+                W0(),
+                Term(),
+                push(getMember((Expr)pop(), (String)pop(), (Expr)pop()))
+            ),
+            Sequence(
+                Member(),
+                W0(),
+                Inc(),
+                push(match()),
+                swap(),
+                W0(),
+                push(new AssignExpr((Expr)pop(), "post" + (String)pop(), new TermExpr()))
+            ),
+            Sequence(
+                Inc(),
+                push(match()),
+                W0(),
+                Member(),
+                push(new AssignExpr((Expr)pop(), "pre" + (String)pop(), new TermExpr())),
+                W0()
+            )
         );
+    }
+
+    public AssignExpr getAssign(Expr value, String op, String name) {
+        return new AssignExpr(name, op, value);
+    }
+
+    public AssignExpr getMember(Expr value, String op, Expr member) {
+        return new AssignExpr(member, op, value);
     }
 
     public Rule Assign() {
@@ -408,10 +599,15 @@ public class SCADParser extends BaseParser<Object>
     }
 
     public Rule Term() {
-        return FirstOf(
-            Formula(),
-            Value(),
-            Sequence("(", W0(), Term(), W0(), ")")
+        return Sequence(
+            push(new TermExpr()),
+            FirstOf(
+                Formula(),
+                Value(),
+                Sequence("(", W0(), Term(), W0(), ")")
+            ),
+            swap(),
+            push(((TermExpr)pop()).addTerm((TermExpr)pop()))
         );
     }
 
@@ -502,12 +698,15 @@ public class SCADParser extends BaseParser<Object>
                     "'"
                 )
             ),
+            push(new StringValue(match())),
             Optional(
                 Sequence(
                     W0(),
                     "%",
                     W0(),
-                    Arguments()
+                    Arguments(),
+                    swap(),
+                    push(((StringValue)pop()).addArg((Argument)pop()))
                 )
             )
         );
@@ -516,20 +715,42 @@ public class SCADParser extends BaseParser<Object>
     public Rule Member() {
         return Sequence(
             Name(),
+            push(new MemberExpr(match())),
             Optional(
                 Sequence(
-                    W0(), "(", W0(), Arguments(), W0(), ")"
+                    W0(), "(", W0(), Arguments(), W0(), ")",
+                    swap(),
+                    push(((MemberExpr)pop()).addArg((Argument)pop()))
                 )
             ),
-            OneOrMore(
-                W0(),
-                ".",
-                W0(),
-                Name(),
-                Optional(
-                    Sequence(
-                        W0(), "(", W0(), Arguments(), W0(), ")"
-                    )
+            W0(),
+            ".",
+            W0(),
+            MemberChild(),
+            swap(),
+            push(((MemberExpr)pop()).addMember((MemberExpr)pop()))
+        );
+    }
+
+    public Rule MemberChild() {
+        return Sequence(
+            Name(),
+            push(new MemberExpr(match())),
+            Optional(
+                Sequence(
+                    W0(), "(", W0(), Arguments(), W0(), ")",
+                    swap(),
+                    push(((MemberExpr)pop()).addArg((Argument)pop()))
+                )
+            ),
+            Optional(
+                Sequence(
+                    W0(),
+                    ".",
+                    W0(),
+                    MemberChild(),
+                    swap(),
+                    push(((MemberExpr)pop()).addMember((MemberExpr)pop()))
                 )
             )
         );
@@ -540,17 +761,30 @@ public class SCADParser extends BaseParser<Object>
             "[",
             W0(),
             Value(),
+            push(getArray((Value)pop())),
             W0(),
             ZeroOrMore(
                 Sequence(
                     ",",
                     W0(),
                     Value(),
+                    swap(),
+                    push(((ArrayValue)pop()).addValue((Value)pop())),
                     W0()
                 )
             ),
             "]"
         );
+    }
+
+    public ArrayValue getArray(Value val) {
+        String type;
+        if (val instanceof ArrayValue) {
+            type = "Array<" + ((ArrayValue)val).type + ">";
+        } else {
+            type = val.valID;
+        }
+        return new ArrayValue(type);
     }
 
     public Rule Escape() {
@@ -595,6 +829,7 @@ public class SCADParser extends BaseParser<Object>
 
     public Rule Formula() {
         return Sequence(
+            push(new TermExpr()),
             FirstOf(
                 Value(),
                 Sequence(
@@ -604,11 +839,26 @@ public class SCADParser extends BaseParser<Object>
                     W0(),
                     ")"
                 )
-            ), 
+            ),
+            swap(),
+            push(addItem((TermExpr)pop(), pop())),
             W0(), 
             FirstOf(Math(), Comparator()),
-            W0(), Term()
+            swap(),
+            push(((TermExpr)pop()).addOperation(match())),
+            W0(), Term(),
+            swap(),
+            push(((TermExpr)pop()).addTerm((TermExpr)pop()))
         );
+    }
+
+    public TermExpr addItem(TermExpr term, Object obj) {
+        if (obj instanceof TermExpr) {
+            term.addTerm((TermExpr)obj);
+        } else {
+            term.addValue((Value)obj);
+        }
+        return term;
     }
 
     public Rule Reserved() {

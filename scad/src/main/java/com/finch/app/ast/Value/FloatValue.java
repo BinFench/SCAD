@@ -4,7 +4,8 @@ public class FloatValue extends Value {
     public double value;
 
     FloatValue(double value) {
-        this.id = "Float";
+        this.valID = "Float";
+        this.id = "Value";
         this.value = value;
     }
 }

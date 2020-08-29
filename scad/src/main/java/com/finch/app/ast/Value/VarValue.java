@@ -4,7 +4,8 @@ public class VarValue extends Value {
     public String name;
 
     VarValue(String name) {
-        this.id = "Var";
+        this.valID = "Var";
+        this.id = "Value";
         this.name = name;
     }
 }

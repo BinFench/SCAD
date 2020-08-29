@@ -4,7 +4,8 @@ public class IntValue extends Value {
     public int value;
 
     IntValue(int value) {
-        this.id = "Int";
+        this.valID = "Int";
+        this.id = "Value";
         this.value = value;
     }
 }
