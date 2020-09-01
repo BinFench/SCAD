@@ -29,7 +29,7 @@ public class TestRecognizerAccept
     public static Collection<String> data() {
         String path = System.getProperty("user.dir");
         List<String> data = new ArrayList<String>();
-        try (Stream<Path> paths = Files.walk(Paths.get(path + "/src/test/accept/"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get(path + "/src/test/recognizer/accept/"))) {
             paths
                 .filter(Files::isRegularFile)
                 .forEach((Path file) -> {

@@ -22,4 +22,21 @@ public class ConditionExpr extends Expr {
         operators.add(op);
         return this;
     }
+
+    public Expr getTerm(int i) {
+        return this.terms.get(i);
+    }
+
+    public String getOp(int i) {
+        return this.operators.get(i);
+    }
+
+    public String prettyPrint(String temp) {
+        String toPrint = getTerm(0).prettyPrint("");
+
+        for (int i = 1; i < this.operators.size(); i++) {
+            toPrint += " " + getOp(i) + " " + getTerm(i).prettyPrint("");
+        }
+        return toPrint + temp;
+    }
 }

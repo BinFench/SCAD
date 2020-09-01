@@ -25,4 +25,11 @@ public class AssignExpr extends Expr {
         this.operator = op;
         this.member = true;
     }
+
+    public String prettyPrint(String temp) {
+        if (this.member) {
+            return this.var.prettyPrint("") + " " + this.operator + " " + this.value.prettyPrint(temp);
+        }
+        return this.name + " " + this.operator + " " + this.value.prettyPrint(temp);
+    }
 }

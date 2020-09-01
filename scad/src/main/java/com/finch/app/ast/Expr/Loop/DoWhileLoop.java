@@ -19,4 +19,12 @@ public class DoWhileLoop extends LoopExpr {
         this.condition = condition;
         return this;
     }
+
+    public String prettyPrint(String temp) {
+        String toPrint = "do {\n";
+        for (int i = 0; i < this.scopes.size(); i++) {
+            toPrint += "\t" + format(getScope(i).prettyPrint(";")) + "\n";
+        }
+        return toPrint + "} while(" + condition.prettyPrint("") + ");";
+    }
 }

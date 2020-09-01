@@ -1,6 +1,6 @@
 package com.finch.app;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -20,7 +20,7 @@ import java.nio.file.Paths;
 import java.io.IOException;
 
 @RunWith(Parameterized.class)
-public class TestRecognizerReject
+public class TestASTPrettyPrint
 {
     @Parameter(0)
     public String input;
@@ -29,7 +29,7 @@ public class TestRecognizerReject
     public static Collection<String> data() {
         String path = System.getProperty("user.dir");
         List<String> data = new ArrayList<String>();
-        try (Stream<Path> paths = Files.walk(Paths.get(path + "/src/test/recognizer/reject/"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get(path + "/src/test/ast/"))) {
             paths
                 .filter(Files::isRegularFile)
                 .forEach((Path file) -> {
@@ -46,8 +46,14 @@ public class TestRecognizerReject
     }
 
     @Test
-    public void shouldAcceptInput()
+    public void shouldPrettyPrint()
     {
-        assertFalse(SCADRecognizer.parse(input));
+        Boolean test = false;
+        try {
+            test = SCADParser.parse(input);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println(e);
+        }
+        assertTrue(test);
     }
 }

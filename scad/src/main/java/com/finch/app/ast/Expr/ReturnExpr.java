@@ -8,4 +8,8 @@ public class ReturnExpr extends Expr {
         this.exprID = "Return";
         this.term = term;
     }
+
+    public String prettyPrint(String temp) {
+        return "return " + this.term.prettyPrint("") + ";";
+    }
 }

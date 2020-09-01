@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Argument {
+public class Argument extends CommonNode {
     public int valType;
     public List<Var> vars;
     public List<Expr> terms;
@@ -41,5 +41,25 @@ public class Argument {
 
     public Expr getVal(int i) {
         return this.terms.get(i);
+    }
+
+    public String prettyPrint(String temp) {
+        String toPrint = "";
+        if (this.valType == 1) {
+            for (int i = 0; i < this.vars.size(); i++) {
+                toPrint += getVar(i).prettyPrint(true);
+                if (i < this.vars.size() - 1) {
+                    toPrint += ", ";
+                }
+            }
+        } else if (this.valType == 2) {
+            for (int i = 0; i < this.terms.size(); i++) {
+                toPrint += getVal(i).prettyPrint("");
+                if (i < this.terms.size() - 1) {
+                    toPrint += ", ";
+                }
+            }
+        }
+        return toPrint;
     }
 }

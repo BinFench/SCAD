@@ -10,4 +10,8 @@ public class FuncCallExpr extends Expr {
         this.name = name;
         this.arguments = arguments;
     }
+
+    public String prettyPrint(String temp) {
+        return this.name + "(" + this.arguments.prettyPrint("") + ")" + temp;
+    }
 }

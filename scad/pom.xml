@@ -84,7 +84,7 @@
           <artifactId>exec-maven-plugin</artifactId>
           <version>1.2.1</version>
           <configuration>
-            <mainClass>com.finch.app.SCADRecognizer</mainClass>
+            <mainClass>com.finch.app.SCADParser</mainClass>
           </configuration>
         </plugin>
       </plugins>

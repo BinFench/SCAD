@@ -26,4 +26,19 @@ public class ArrayValue extends Value {
         }
         return this;
     }
+
+    public Value getValue(int i) {
+        return this.values.get(i);
+    }
+
+    public String prettyPrint(String temp) {
+        String toPrint = "[";
+        for (int i = 0; i < this.values.size(); i++) {
+            toPrint += getValue(i).prettyPrint("");
+            if (i < this.values.size() - 1) {
+                toPrint += ", ";
+            }
+        }
+        return toPrint + "]" + temp;
+    }
 }

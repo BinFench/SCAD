@@ -7,16 +7,19 @@ com/finch/app/MemberExpr.class
 com/finch/app/Expr.class
 com/finch/app/ShapeValue.class
 com/finch/app/TermExpr.class
+com/finch/app/CommonNode.class
 com/finch/app/FloatValue.class
 com/finch/app/Class.class
 com/finch/app/TestRecognizerReject.class
 com/finch/app/TestRecognizerAccept.class
+com/finch/app/TestASTPrettyPrint.class
 com/finch/app/BoolValue.class
 com/finch/app/ArrayValue.class
 com/finch/app/IllegalParsableException.class
 com/finch/app/ConditionExpr.class
 com/finch/app/LoopExpr.class
 com/finch/app/Program.class
+com/finch/app/FuncValue.class
 com/finch/app/Var.class
 com/finch/app/OpExpr.class
 com/finch/app/Func.class
@@ -26,6 +29,7 @@ com/finch/app/AssignExpr.class
 com/finch/app/VarValue.class
 com/finch/app/Argument.class
 com/finch/app/Scope.class
+com/finch/app/SCADParser$1.class
 com/finch/app/FuncCallExpr.class
 com/finch/app/WhileLoop.class
 com/finch/app/ConditionalExpr.class

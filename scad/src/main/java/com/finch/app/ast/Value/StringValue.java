@@ -17,4 +17,12 @@ public class StringValue extends Value {
         this.hasArg = true;
         return this;
     }
+
+    public String prettyPrint(String temp) {
+        String toPrint = this.value;
+        if (this.hasArg) {
+            toPrint += " % " + this.arguments.prettyPrint("");
+        }
+        return toPrint + temp;
+    }
 }

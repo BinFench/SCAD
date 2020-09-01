@@ -8,4 +8,8 @@ public class VarValue extends Value {
         this.id = "Value";
         this.name = name;
     }
+
+    public String prettyPrint(String temp) {
+        return this.name + temp;
+    }
 }

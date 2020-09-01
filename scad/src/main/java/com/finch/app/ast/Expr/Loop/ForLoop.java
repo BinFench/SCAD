@@ -9,6 +9,7 @@ public class ForLoop extends LoopExpr {
     public Var var;
     public ConditionExpr condition;
     public Expr expr;
+    public Boolean hasVar;
     
     ForLoop(Expr expr, ConditionExpr condition) {
         this.id = "Expr";
@@ -17,6 +18,7 @@ public class ForLoop extends LoopExpr {
         this.condition = condition;
         this.expr = expr;
         this.scopes = new ArrayList<Scope>();
+        this.hasVar = false;
     }
 
     public ForLoop addVar(Object obj) {
@@ -25,7 +27,22 @@ public class ForLoop extends LoopExpr {
         } else {
             this.var = (Var)obj;
             this.varName = this.var.name;
+            this.hasVar = true;
         }
         return this;
+    }
+
+    public String prettyPrint() {
+        String toPrint = "for(";
+        if (this.hasVar) {
+            toPrint += this.var.prettyPrint("") + "; ";
+        } else {
+            toPrint += this.varName + "; ";
+        }
+        toPrint += this.condition.prettyPrint("") + "; " + this.expr.prettyPrint("") + ") {\n";
+        for (int i = 0; i < this.scopes.size(); i++) {
+            toPrint += "\t" + format(getScope(i).prettyPrint(";")) + "\n";
+        }
+        return toPrint + "}";
     }
 }

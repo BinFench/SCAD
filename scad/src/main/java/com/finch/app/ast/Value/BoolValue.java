@@ -8,4 +8,11 @@ public class BoolValue extends Value {
         this.id = "Value";
         this.value = value;
     }
+
+    public String prettyPrint(String temp) {
+        if (this.value) {
+            return "true" + temp;
+        }
+        return "false" + temp;
+    }
 }

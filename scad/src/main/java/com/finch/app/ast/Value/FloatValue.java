@@ -8,4 +8,8 @@ public class FloatValue extends Value {
         this.id = "Value";
         this.value = value;
     }
+
+    public String prettyPrint(String temp) {
+        return "" + this.value + temp;
+    }
 }

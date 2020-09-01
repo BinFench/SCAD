@@ -37,4 +37,23 @@ public class TermExpr extends Expr {
         this.operations.add(operation);
         return this;
     }
+
+    public String prettyPrint(String temp) {
+        String toPrint = "";
+        int term = 0;
+        int value = 0;
+        for (int i = 0; i < this.alignment.size(); i++) {
+            if (i != 0) {
+                toPrint += " " + this.operations.get(i - 1) + " ";
+            }
+            if (this.alignment.get(i) == 0) {
+                toPrint += "(" + this.subTerms.get(term).prettyPrint("") + ")";
+                term++;
+            } else {
+                toPrint += this.values.get(value).prettyPrint("");
+                value++;
+            }
+        }
+        return toPrint + temp;
+    }
 }

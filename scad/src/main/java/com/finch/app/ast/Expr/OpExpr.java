@@ -10,4 +10,8 @@ public class OpExpr extends Expr {
         this.name = name;
         this.argument = argument;
     }
+
+    public String prettyPrint(String temp) {
+        return this.name + "(" + this.argument.prettyPrint("") + ")" + temp;
+    }
 }

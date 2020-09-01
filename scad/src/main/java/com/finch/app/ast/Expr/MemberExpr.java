@@ -23,4 +23,12 @@ public class MemberExpr extends Expr {
         this.hasArgs = true;
         return this;
     }
+
+    public String prettyPrint(String temp) {
+        String toPrint = this.name;
+        if (this.hasArgs) {
+            toPrint += "(" + this.arguments.prettyPrint("") + ")";
+        }
+        return toPrint + "." + this.member.prettyPrint(temp);
+    }
 }
