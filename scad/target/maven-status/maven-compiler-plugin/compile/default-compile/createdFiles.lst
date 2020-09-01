@@ -3,7 +3,9 @@ com/finch/app/ReturnExpr.class
 com/finch/app/SCADRecognizer.class
 com/finch/app/Value.class
 com/finch/app/StringValue.class
+com/finch/app/MemberValue.class
 com/finch/app/MemberExpr.class
+com/finch/app/OpValue.class
 com/finch/app/Expr.class
 com/finch/app/ShapeValue.class
 com/finch/app/TermExpr.class

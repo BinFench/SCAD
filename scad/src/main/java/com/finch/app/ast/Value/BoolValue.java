@@ -9,10 +9,15 @@ public class BoolValue extends Value {
         this.value = value;
     }
 
-    public String prettyPrint(String temp) {
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("BOOL[");
+        String toPrint;
         if (this.value) {
-            return "true" + temp;
+            toPrint = (label ? "[BOOL]" : "") + "true" + temp;
+        } else {
+            toPrint = (label ? "[BOOL]" : "") + "false" + temp;
         }
-        return "false" + temp;
+        System.out.println("]BOOL");
+        return toPrint;
     }
 }

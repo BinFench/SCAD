@@ -22,21 +22,25 @@ public class Var extends Scope {
         return this;
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = type + " " + name;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("VAR[");
+        String toPrint = (label ? "[VAR]" : "") + type + " " + name;
         if (this.assigned) {
-            toPrint += " = " + this.value.prettyPrint(temp);
+            toPrint += " = " + this.value.prettyPrint(temp, label);
         }
 
+        System.out.println("]VAR");
         return toPrint + temp;
     }
 
-    public String prettyPrint(Boolean a) {
-        String toPrint = type + " " + name;
+    public String prettyPrint(Boolean a, Boolean label) {
+        System.out.println("VAR[");
+        String toPrint = (label ? "[VAR]" : "") + type + " " + name;
         if (this.assigned) {
             throw new IllegalParsableException("Illegal scope: current scope does not allow variable assignment.");
         }
 
+        System.out.println("]VAR");
         return toPrint;
     }
 }

@@ -40,7 +40,8 @@ public class Program extends CommonNode {
         return this.exprs.get(i);
     }
 
-    public String prettyPrint() {
+    public String prettyPrint(Boolean label) {
+        System.out.println("PROGRAM[");
         this.funcs = new ArrayList<Func>();
         this.classes = new ArrayList<Class>();
         this.vars = new ArrayList<Var>();
@@ -67,7 +68,7 @@ public class Program extends CommonNode {
 
         for (int i = 0; i < this.vars.size(); i++) {
             type = "Var";
-            toPrint += getVar(i).prettyPrint(";");
+            toPrint += getVar(i).prettyPrint(";", label);
             if (i < this.vars.size() - 1) {
                 toPrint += "\n";
             }
@@ -78,7 +79,7 @@ public class Program extends CommonNode {
                 toPrint += "\n\n";
             }
             type = "Class";
-            toPrint += getClass(i).prettyPrint("");
+            toPrint += getClass(i).prettyPrint("", label);
             if (i < this.classes.size() - 1) {
                 toPrint += "\n\n";
             }
@@ -89,7 +90,7 @@ public class Program extends CommonNode {
                 toPrint += "\n\n";
             }
             type = "Func";
-            toPrint += getFunc(i).prettyPrint("");
+            toPrint += getFunc(i).prettyPrint("", label);
             if (i < this.funcs.size() - 1) {
                 toPrint += "\n\n";
             }
@@ -163,12 +164,14 @@ public class Program extends CommonNode {
                 default:
                     throw new IllegalParsableException("Illegal scope: global scope can only contain Functions, Classes, Vars, and Statement Expressions.");
             }
-            toPrint += getExpr(i).prettyPrint(";");
+            toPrint += getExpr(i).prettyPrint(";", label);
 
             if (done) {
                 break;
             }
         }
+
+        System.out.println("]PROGRAM");
 
         return toPrint;
     }

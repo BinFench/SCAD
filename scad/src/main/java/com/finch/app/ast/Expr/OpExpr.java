@@ -11,7 +11,10 @@ public class OpExpr extends Expr {
         this.argument = argument;
     }
 
-    public String prettyPrint(String temp) {
-        return this.name + "(" + this.argument.prettyPrint("") + ")" + temp;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("OP[");
+        String toPrint = (label ? "[OP]" : "") + this.name + "(" + this.argument.prettyPrint("", label) + ")" + temp;
+        System.out.println("]OP");
+        return toPrint;
     }
 }

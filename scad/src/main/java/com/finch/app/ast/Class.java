@@ -37,12 +37,13 @@ public class Class extends Scope {
         return this.funcs.get(i);
     }
 
-    public String prettyPrint(String temp) {
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("CLASS[");
         this.vars = new ArrayList<Var>();
         this.funcs = new ArrayList<Func>();
 
         String type = "Start";
-        String toPrint = name + " {\n";
+        String toPrint = (label ? "[CLASS]" : "") + name + " {\n";
 
         for (int i = 0; i < this.scopes.size(); i++) {
             if (getScope(i) instanceof Func) {
@@ -56,7 +57,7 @@ public class Class extends Scope {
 
         for (int i = 0; i < this.vars.size(); i++) {
             type = "Var";
-            toPrint += "\t" + getVar(i).prettyPrint(true) + ";";
+            toPrint += "\t" + getVar(i).prettyPrint(true, label) + ";";
             if (i < this.vars.size() - 1) {
                 toPrint += "\n";
             }
@@ -67,12 +68,13 @@ public class Class extends Scope {
                 toPrint += "\n\n";
             }
             type = "Func";
-            toPrint += "\t" + format(getFunc(i).prettyPrint(""));
+            toPrint += "\t" + format(getFunc(i).prettyPrint("", label));
             if (i < this.funcs.size() - 1) {
                 toPrint += "\n\n";
             }
         }
 
+        System.out.println("]CLASS");
         return toPrint + "\n}";
     }
 }

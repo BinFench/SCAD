@@ -9,7 +9,10 @@ public class VarValue extends Value {
         this.name = name;
     }
 
-    public String prettyPrint(String temp) {
-        return this.name + temp;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("VARVALUE[");
+        String toPrint = (label ? "[VARVALUE]" : "") + this.name + temp;
+        System.out.println("]VARVALUE");
+        return toPrint;
     }
 }

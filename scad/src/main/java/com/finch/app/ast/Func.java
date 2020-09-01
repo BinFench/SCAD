@@ -42,7 +42,8 @@ public class Func extends Scope {
     }
 
     @Override
-    public String prettyPrint(String temp) {
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("FUNC[");
         this.vars = new ArrayList<Var>();
         this.exprs = new ArrayList<Expr>();
 
@@ -60,11 +61,11 @@ public class Func extends Scope {
             }
         }
 
-        String toPrint = this.type + " " + this.name + "(" + this.arguments.prettyPrint("") + ") {\n";
+        String toPrint = (label ? "[FUNC]" : "") + this.type + " " + this.name + "(" + this.arguments.prettyPrint("", label) + ") {\n";
         
         for (int i = 0; i < this.vars.size(); i++) {
             type = "Var";
-            toPrint += "\t" + getVar(i).prettyPrint(";");
+            toPrint += "\t" + getVar(i).prettyPrint(";", label);
             if (i < this.vars.size() - 1) {
                 toPrint += "\n";
             }
@@ -138,13 +139,14 @@ public class Func extends Scope {
                 default:
                     throw new IllegalParsableException("Illegal scope: Function scope can only contain Vars, and Statement Expressions.");
             }
-            toPrint += "\t" + format(getExpr(i).prettyPrint(";"));
+            toPrint += "\t" + format(getExpr(i).prettyPrint(";", label));
 
             if (done) {
                 break;
             }
         }
 
+        System.out.println("]FUNC");
         return toPrint + "\n}";
     }
 }

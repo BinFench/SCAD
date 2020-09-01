@@ -11,7 +11,10 @@ public class FuncCallExpr extends Expr {
         this.arguments = arguments;
     }
 
-    public String prettyPrint(String temp) {
-        return this.name + "(" + this.arguments.prettyPrint("") + ")" + temp;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("FUNCCALL[");
+        String toPrint = (label ? "[FUNCCALL]" : "") + this.name + "(" + this.arguments.prettyPrint("", label) + ")" + temp;
+        System.out.println("]FUNCCALL");
+        return toPrint;
     }
 }

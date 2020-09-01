@@ -48,12 +48,6 @@ public class TestASTPrettyPrint
     @Test
     public void shouldPrettyPrint()
     {
-        Boolean test = false;
-        try {
-            test = SCADParser.parse(input);
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println(e);
-        }
-        assertTrue(test);
+        assertTrue(SCADParser.parse(input));
     }
 }

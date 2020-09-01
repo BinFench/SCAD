@@ -9,7 +9,7 @@ public class Scope extends CommonNode {
         return this;
     }
     
-    public String prettyPrint(String temp) {
+    public String prettyPrint(String temp, Boolean label) {
         return temp;
     }
 

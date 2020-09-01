@@ -24,11 +24,14 @@ public class MemberExpr extends Expr {
         return this;
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = this.name;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("MEMBER[");
+        String toPrint = (label ? "[MEMBER]" : "") + this.name;
         if (this.hasArgs) {
-            toPrint += "(" + this.arguments.prettyPrint("") + ")";
+            toPrint += "(" + this.arguments.prettyPrint("", label) + ")";
         }
-        return toPrint + "." + this.member.prettyPrint(temp);
+        toPrint += "." + this.member.prettyPrint(temp, label);
+        System.out.println("]MEMBER");
+        return toPrint;
     }
 }

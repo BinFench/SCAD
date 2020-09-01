@@ -63,22 +63,24 @@ public class ConditionalExpr extends Expr {
         return this;
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = "if(" + this.condition.prettyPrint("") + ") {\n";
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("CONDITIONAL[");
+        String toPrint = (label ? "[CONDITIONAL]" : "") + "if(" + this.condition.prettyPrint("", label) + ") {\n";
         for (int i = 0; i < this.scopes.size(); i++) {
-            toPrint += "\t" + format(getScope(i).prettyPrint(";")) + "\n";
+            toPrint += "\t" + format(getScope(i).prettyPrint(";", label)) + "\n";
         }
         toPrint += "}";
         for (int i = 0; i < this.conditionals.size(); i++) {
-            toPrint += " else " + getConditional(i).prettyPrint("");
+            toPrint += " else " + getConditional(i).prettyPrint("", label);
         }
         if (this.hasElse) {
             toPrint += " else {\n";
             for (int i = 0; i < this.elseScopes.size(); i++) {
-                toPrint += "\t" + format(getElseScope(i).prettyPrint(";")) + "\n";
+                toPrint += "\t" + format(getElseScope(i).prettyPrint(";", label)) + "\n";
             }
             toPrint += "}";
         }
+        System.out.println("]CONDITIONAL");
         return toPrint;
     }
 }

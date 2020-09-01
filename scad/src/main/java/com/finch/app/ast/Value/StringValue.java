@@ -18,11 +18,13 @@ public class StringValue extends Value {
         return this;
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = this.value;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("STRING[");
+        String toPrint = (label ? "[STRING]" : "") + this.value;
         if (this.hasArg) {
-            toPrint += " % " + this.arguments.prettyPrint("");
+            toPrint += " % " + this.arguments.prettyPrint("", label);
         }
+        System.out.println("STRING[");
         return toPrint + temp;
     }
 }

@@ -43,23 +43,25 @@ public class Argument extends CommonNode {
         return this.terms.get(i);
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = "";
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("ARGUMENT[");
+        String toPrint = label ? "[ARGUMENT]" : "";
         if (this.valType == 1) {
             for (int i = 0; i < this.vars.size(); i++) {
-                toPrint += getVar(i).prettyPrint(true);
+                toPrint += getVar(i).prettyPrint(true, label);
                 if (i < this.vars.size() - 1) {
                     toPrint += ", ";
                 }
             }
         } else if (this.valType == 2) {
             for (int i = 0; i < this.terms.size(); i++) {
-                toPrint += getVal(i).prettyPrint("");
+                toPrint += getVal(i).prettyPrint("", label);
                 if (i < this.terms.size() - 1) {
                     toPrint += ", ";
                 }
             }
         }
+        System.out.println("]ARGUMENT");
         return toPrint;
     }
 }

@@ -31,12 +31,14 @@ public class ConditionExpr extends Expr {
         return this.operators.get(i);
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = getTerm(0).prettyPrint("");
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("CONDITION[");
+        String toPrint = (label ? "[CONDITION]" : "") + getTerm(0).prettyPrint("", label);
 
         for (int i = 1; i < this.operators.size(); i++) {
-            toPrint += " " + getOp(i) + " " + getTerm(i).prettyPrint("");
+            toPrint += " " + getOp(i) + " " + getTerm(i).prettyPrint("", label);
         }
+        System.out.println("]CONDITION");
         return toPrint + temp;
     }
 }

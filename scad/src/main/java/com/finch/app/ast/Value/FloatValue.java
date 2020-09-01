@@ -9,7 +9,10 @@ public class FloatValue extends Value {
         this.value = value;
     }
 
-    public String prettyPrint(String temp) {
-        return "" + this.value + temp;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("FLOAT[");
+        String toPrint = (label ? "[FLOAT]" : "") + "" + this.value + temp;
+        System.out.println("]FLOAT");
+        return toPrint;
     }
 }

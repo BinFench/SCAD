@@ -9,7 +9,10 @@ public class IntValue extends Value {
         this.value = value;
     }
 
-    public String prettyPrint(String temp) {
-        return "" + this.value + temp;
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("INT[");
+        String toPrint = (label ? "[INT]" : "") + this.value + temp;
+        System.out.println("]INT");
+        return toPrint;
     }
 }

@@ -38,8 +38,9 @@ public class TermExpr extends Expr {
         return this;
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = "";
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("TERM[");
+        String toPrint = label ? "[TERM]" : "";
         int term = 0;
         int value = 0;
         for (int i = 0; i < this.alignment.size(); i++) {
@@ -47,13 +48,14 @@ public class TermExpr extends Expr {
                 toPrint += " " + this.operations.get(i - 1) + " ";
             }
             if (this.alignment.get(i) == 0) {
-                toPrint += "(" + this.subTerms.get(term).prettyPrint("") + ")";
+                toPrint += "(" + this.subTerms.get(term).prettyPrint("", label) + ")";
                 term++;
             } else {
-                toPrint += this.values.get(value).prettyPrint("");
+                toPrint += this.values.get(value).prettyPrint("", label);
                 value++;
             }
         }
+        System.out.println("]TERM");
         return toPrint + temp;
     }
 }

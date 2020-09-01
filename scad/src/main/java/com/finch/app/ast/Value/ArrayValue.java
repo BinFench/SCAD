@@ -31,14 +31,16 @@ public class ArrayValue extends Value {
         return this.values.get(i);
     }
 
-    public String prettyPrint(String temp) {
-        String toPrint = "[";
+    public String prettyPrint(String temp, Boolean label) {
+        System.out.println("ARRAY[");
+        String toPrint = (label ? "[ARRAY]" : "") + "[";
         for (int i = 0; i < this.values.size(); i++) {
-            toPrint += getValue(i).prettyPrint("");
+            toPrint += getValue(i).prettyPrint("", label);
             if (i < this.values.size() - 1) {
                 toPrint += ", ";
             }
         }
+        System.out.println("]ARRAY");
         return toPrint + "]" + temp;
     }
 }
