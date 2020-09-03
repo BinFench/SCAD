@@ -175,4 +175,469 @@ public class Program extends CommonNode {
 
         return toPrint;
     }
+
+    public Value interpret() {
+        List<Var> interpretedVars = new ArrayList<Var>(); //These vars are global scope
+        List<Func> candidateFuncs;
+        Value value;
+
+        for (int i = 0; i < this.scopes.size(); i++) {
+            if (getScope(i) instanceof Var) {
+                interpretedVars.add((Var)getScope(i));
+            } else if (getScope(i) instanceof Expr) {
+                //TODO: interpret expressions
+                Expr expr = (Expr)getScope(i);
+                switch(expr.exprID) {
+                    case "Assign":
+                        AssignExpr assign = (AssignExpr)expr;
+                        String name = assign.name;
+                        String operator = assign.operator;
+                        Var interpretedVar = null;
+                        int match = -1;
+                        String matchType = "";
+                        Func interpretedFunc = null;
+                        Class interpretedClass = null;
+                        TermExpr newterm = new TermExpr();
+                        
+                        for (int j = 0; j < interpretedVars.size(); j++) {
+                            interpretedVar = interpretedVars.get(j);
+                            if (name == interpretedVar.name) {
+                                match = j;
+                                matchType = "Var";
+                                break;
+                            }
+                        }
+
+                        if (match < 0 && !assign.member) {
+                            throw new IllegalParsableException("Error: unknown variable " + name);
+                        }
+
+                        candidateFuncs = new ArrayList<Func>();
+                        for (int j = 0; j < this.funcs.size(); j++) {
+                            interpretedFunc = (Func)this.funcs.get(j);
+                            if (name == interpretedFunc.name) {
+                                match = j;
+                                matchType = "Func";
+                                candidateFuncs.add(interpretedFunc);
+                            }
+                        }
+
+                        for (int j = 0; j < this.classes.size(); j++) {
+                            interpretedClass = this.classes.get(j);
+                            if (name == interpretedClass.name) {
+                                if (matchType == "Var") {
+                                    throw new IllegalParsableException("Error: cannot name variable after type " + name);
+                                } else if (matchType == "Func") {
+                                    throw new IllegalParsableException("Error: Constructor function must be within class " + name);
+                                }
+                                match = j;
+                                matchType = "Class";
+                                break;
+                            }
+                        }
+
+                        switch(matchType) {
+                            case "Var":
+
+                                switch (interpretedVar.type) {
+                                    case "int":
+                                        if (assign.member) {
+                                            throw new IllegalParsableException("Error: Members from this type are non assignable: int");
+                                        }
+
+                                        if (assign.hasValue) {
+                                            value = assign.value.interpret();
+                                            if (value.valID == "Int" || value.valID == "Float") {
+                                                switch(operator) {
+                                                    case "=":
+                                                        interpretedVar.assign(assign.value);
+                                                    break
+
+                                                    case "+=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("+");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "-=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("-");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "*=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("*");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "/=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("/");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "^=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("^");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "&=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("&");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "|=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("|");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "^^=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("^^");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case ">>=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation(">>");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "<<=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("<<");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    default:
+                                                        throw new IllegalParsableException("Error: Invalid operator " + operator);
+                                                    break
+                                                }
+                                            } else {
+                                                throw new IllegalParsableException("Error: cannot assign " + value.valID + " to int.");
+                                            }
+                                        } else {
+                                            if (interpretedVar.assigned) {
+                                                if (operator.contains("!")) {
+                                                    throw new IllegalParsableException("Error: Invalid operator " + operator);
+                                                } else if (operator.contains("++")) {
+                                                    newterm.addValue(interpretedVar.value.interpret());
+                                                    newterm.addOperation("+");
+                                                    newterm.addValue(new IntValue(1));
+                                                } else if (operator.contains("--")) {
+                                                    newterm.addValue(interpretedVar.value.interpret());
+                                                    newterm.addOperation("-");
+                                                    newterm.addValue(new IntValue(1));
+                                                }
+                                            } else {
+                                                throw new IllegalParsableException("Error: Uninitialized variable " + name);
+                                            }
+                                        }
+                                    break;
+
+                                    case "float":
+                                        if (assign.member) {
+                                            throw new IllegalParsableException("Error: Members from this type are non assignable: float");
+                                        }
+
+                                        if (assign.hasValue) {
+                                            value = assign.value.interpret();
+                                            if (value.valID == "Int" || value.valID == "Float") {
+                                                switch(operator) {
+                                                    case "=":
+                                                        interpretedVar.assign(assign.value);
+                                                    break
+
+                                                    case "+=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("+");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "-=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("-");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "*=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("*");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "/=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("/");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "^=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("^");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "&=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("&");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "|=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("|");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "^^=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("^^");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case ">>=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation(">>");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "<<=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("<<");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    default:
+                                                        throw new IllegalParsableException("Error: Invalid operator " + operator);
+                                                    break
+                                                }
+                                            } else {
+                                                throw new IllegalParsableException("Error: cannot assign " + value.valID + " to float.");
+                                            }
+                                        } else {
+                                            if (interpretedVar.assigned) {
+                                                if (operator.contains("!")) {
+                                                    throw new IllegalParsableException("Error: Invalid operator " + operator);
+                                                } else if (operator.contains("++")) {
+                                                    newterm.addValue(interpretedVar.value.interpret());
+                                                    newterm.addOperation("+");
+                                                    newterm.addValue(new IntValue(1));
+                                                } else if (operator.contains("--")) {
+                                                    newterm.addValue(interpretedVar.value.interpret());
+                                                    newterm.addOperation("-");
+                                                    newterm.addValue(new IntValue(1));
+                                                }
+                                            } else {
+                                                throw new IllegalParsableException("Error: Uninitialized variable " + name);
+                                            }
+                                        }
+                                    break;
+
+                                    case "bool":
+                                        if (assign.member) {
+                                            throw new IllegalParsableException("Error: Members from this type are non assignable: bool");
+                                        }
+
+                                        if (assign.hasValue) {
+                                            value = assign.value.interpret();
+                                            if (value.valID == "Bool") {
+                                                switch(operator) {
+                                                    case "=":
+                                                        interpretedVar.assign(assign.value);
+                                                    break
+
+                                                    case "^^=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("^^");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "&=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("&&");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    case "|=":
+                                                        if (interpretedVar.assigned) {
+                                                            newterm.addValue(interpretedVar.value.interpret());
+                                                            newterm.addOperation("||");
+                                                            newterm.addValue(value);
+                                                            interpretedVar.assign(newterm);
+                                                        } else {
+                                                            throw new IllegalParsableException("Error: Illegal assignment to unassigned variable " + name);
+                                                        }
+                                                    break
+
+                                                    default:
+                                                        throw new IllegalParsableException("Error: Invalid operator " + operator);
+                                                    break
+                                                }
+                                            } else {
+                                                throw new IllegalParsableException("Error: cannot assign " + value.valID + " to bool.");
+                                            }
+                                        } else {
+                                            if (interpretedVar.assigned) {
+                                                if (operator.contains("!")) {
+                                                    newterm.addValue(new BoolValue(!((BoolValue)interpretedVar.value.interpret()).value));
+                                                } else {
+                                                    throw new IllegalParsableException("Error: Invalid operator " + operator);
+                                                }
+                                            } else {
+                                                throw new IllegalParsableException("Error: Uninitialized variable " + name);
+                                            }
+                                        }
+                                    break;
+                                }
+                            break;
+                        }
+
+
+                    break;
+
+                    case "Conditional":
+
+                    break;
+
+                    case "FuncCall":
+
+                    break;
+
+                    case "Member":
+
+                    break;
+
+                    case "Op":
+
+                    break;
+
+                    case "Return":
+
+                    break;
+
+                    default:
+
+                    break;
+                }
+                break;
+            }
+        }
+
+        return new VoidValue();
+    }
 }
